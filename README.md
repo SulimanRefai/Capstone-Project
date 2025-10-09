@@ -1,7 +1,7 @@
 # Capstone-Project
 
 # Events Calendar
-# Project Description:
+# Project Overview
 The Events Calendar is a web-based application that allows users to manage and organize their personal events efficiently. Users can create, edit, and delete events, as well as view them in a list sorted by date and time. Each event can be assigned a category, such as Meeting, Study, Personal, or Travel, to help organize and filter events. The application includes user authentication, ensuring that each user's events are private and secure. Built with Django for the backend and HTML/CSS for the frontend, it provides a responsive and user-friendly interface for managing daily schedules.
 
 # User Stories:
