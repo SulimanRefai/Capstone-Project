@@ -43,3 +43,4 @@ Table events {
   category_id int [ref: > categories.id]            
 }
 https://dbdiagram.io/d/68e779abd2b621e4220502c1
+<img width="854" height="451" alt="image" src="https://github.com/user-attachments/assets/51ea10cf-0af3-4741-9ffd-37e7134faef1" />
