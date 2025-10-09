@@ -22,25 +22,6 @@ The Events Calendar is a web-based application that allows users to manage and o
 
 # ERD :
 
-Table users {
-  username varchar(50) [pk]  
-  email varchar(100)
-  password varchar(255)
-}
-
-Table categories {
-  id int [pk, increment]      
-  name varchar(50)             
-}
-
-Table events {
-  id int [pk, increment]       
-  title varchar(100)            
-  description text             
-  date date                    
-  time time                     
-  user_username varchar(50) [ref: > users.username]  
-  category_id int [ref: > categories.id]            
-}
 https://dbdiagram.io/d/68e779abd2b621e4220502c1
+
 <img width="854" height="451" alt="image" src="https://github.com/user-attachments/assets/51ea10cf-0af3-4741-9ffd-37e7134faef1" />
