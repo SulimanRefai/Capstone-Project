@@ -42,3 +42,4 @@ Table events {
   user_username varchar(50) [ref: > users.username]  
   category_id int [ref: > categories.id]            
 }
+https://dbdiagram.io/d/68e779abd2b621e4220502c1
