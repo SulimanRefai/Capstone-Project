@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
@@ -7,12 +6,6 @@ from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Event, Calendar
-
-class HomeView(TemplateView):
-    template_name = "home.html"
-
-class AboutView(TemplateView):
-    template_name = "about.html"
 
 class UserLoginView(LoginView):
     template_name = "accounts/login.html"
@@ -22,10 +15,9 @@ class UserLoginView(LoginView):
         return reverse_lazy("dashboard")
 
 class UserLogoutView(LogoutView):
-    template_name = "accounts/logout.html"
     next_page = "home"
 
-class SignUpView(View):
+class SignUpView(TemplateView):
     def get(self, request):
         form = UserCreationForm()
         return render(request, "accounts/signup.html", {"form": form})
@@ -40,6 +32,9 @@ class SignUpView(View):
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "events/dashboard.html"
+
+class AboutView(TemplateView):
+    template_name = "about.html"
 
 class EventListView(LoginRequiredMixin, ListView):
     model = Event
