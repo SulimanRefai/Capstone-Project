@@ -1,42 +1,94 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse_lazy
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, CreateView, DetailView
+from django.views import View
+from .models import Calendar, Event
 
-def register_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        confirm_password = request.POST['confirm_password']
-
-        if password == confirm_password:
-            if User.objects.filter(username=username).exists():
-                messages.error(request, 'Username already taken.')
-            else:
-                User.objects.create_user(username=username, email=email, password=password)
-                messages.success(request, 'Account created successfully!')
-                return redirect('login')
+# ----------------------------
+# Signup view (Function-Based)
+# ----------------------------
+def signup(request):
+    error_message = ""
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("dashboard")
         else:
-            messages.error(request, 'Passwords do not match.')
+            error_message = "Invalid sign up - try again"
+    else:
+        form = UserCreationForm()
 
-    return render(request, 'events/register.html')
+    context = {"form": form, "error_message": error_message}
+    return render(request, "signup.html", context)
 
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+# ----------------------------
+# Login view (Function-Based)
+# ----------------------------
+class UserLoginView(View):
+    template_name = "login.html"
 
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        username = request.POST.get("username")
+        password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
             login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, 'Invalid credentials.')
+            return redirect("dashboard")
+        return render(request, self.template_name, {"error": "Invalid username or password"})
 
-    return render(request, 'events/login.html')
+# ----------------------------
+# Logout
+# ----------------------------
+class UserLogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect("login")
 
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+# ----------------------------
+# Dashboard (List Events)
+# ----------------------------
+class DashboardView(LoginRequiredMixin, ListView):
+    model = Event
+    template_name = "dashboard.html"
+    context_object_name = "events"
+
+    def get_queryset(self):
+        calendar, _ = Calendar.objects.get_or_create(
+            owner=self.request.user,
+            defaults={"name": f"{self.request.user.username}'s Calendar"}
+        )
+        return Event.objects.filter(calendar=calendar).order_by("start_time")
+
+# ----------------------------
+# Add Event
+# ----------------------------
+class EventCreateView(LoginRequiredMixin, CreateView):
+    model = Event
+    fields = ["title", "description", "start_time", "end_time"]
+    template_name = "add_event.html"
+    success_url = reverse_lazy("dashboard")
+
+    def form_valid(self, form):
+        calendar, _ = Calendar.objects.get_or_create(
+            owner=self.request.user,
+            defaults={"name": f"{self.request.user.username}'s Calendar"}
+        )
+        form.instance.calendar = calendar
+        return super().form_valid(form)
+
+# ----------------------------
+# Home view
+# ----------------------------
+class HomeView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect("dashboard")
+        return redirect("login")
