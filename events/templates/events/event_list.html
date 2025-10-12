@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}My Events{% endblock %}
+{% block content %}
+<h1>My Events</h1>
+<a href="{% url 'event-add' %}">Add Event</a>
+<ul>
+  {% for event in object_list %}
+  <li>
+    <a href="{% url 'event-detail' event.id %}">{{ event.title }}</a> 
+    ({{ event.start_time|date:"Y-m-d H:i" }} - {{ event.end_time|date:"Y-m-d H:i" }})
+  </li>
+  {% empty %}
+  <li>No events yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}{% if object %}Edit Event{% else %}Add Event{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if object %}Edit Event{% else %}Add Event{% endif %}</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">{% if object %}Update{% else %}Create{% endif %}</button>
+</form>
+<a href="{% url 'event-list' %}">Cancel</a>
+{% endblock %}

@@ -1,94 +1,75 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, DetailView
 from django.views import View
-from .models import Calendar, Event
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Event, Calendar
 
-# ----------------------------
-# Signup view (Function-Based)
-# ----------------------------
-def signup(request):
-    error_message = ""
-    if request.method == "POST":
+class HomeView(TemplateView):
+    template_name = "home.html"
+
+class AboutView(TemplateView):
+    template_name = "about.html"
+
+class UserLoginView(LoginView):
+    template_name = "accounts/login.html"
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy("dashboard")
+
+class UserLogoutView(LogoutView):
+    template_name = "accounts/logout.html"
+    next_page = "home"
+
+class SignUpView(View):
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, "accounts/signup.html", {"form": form})
+
+    def post(self, request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect("dashboard")
-        else:
-            error_message = "Invalid sign up - try again"
-    else:
-        form = UserCreationForm()
+        return render(request, "accounts/signup.html", {"form": form})
 
-    context = {"form": form, "error_message": error_message}
-    return render(request, "signup.html", context)
+class DashboardView(LoginRequiredMixin, TemplateView):
+    template_name = "events/dashboard.html"
 
-# ----------------------------
-# Login view (Function-Based)
-# ----------------------------
-class UserLoginView(View):
-    template_name = "login.html"
-
-    def get(self, request):
-        return render(request, self.template_name)
-
-    def post(self, request):
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect("dashboard")
-        return render(request, self.template_name, {"error": "Invalid username or password"})
-
-# ----------------------------
-# Logout
-# ----------------------------
-class UserLogoutView(View):
-    def get(self, request):
-        logout(request)
-        return redirect("login")
-
-# ----------------------------
-# Dashboard (List Events)
-# ----------------------------
-class DashboardView(LoginRequiredMixin, ListView):
+class EventListView(LoginRequiredMixin, ListView):
     model = Event
-    template_name = "dashboard.html"
-    context_object_name = "events"
+    template_name = "events/event_list.html"
 
     def get_queryset(self):
-        calendar, _ = Calendar.objects.get_or_create(
-            owner=self.request.user,
-            defaults={"name": f"{self.request.user.username}'s Calendar"}
-        )
-        return Event.objects.filter(calendar=calendar).order_by("start_time")
+        return Event.objects.filter(calendar__owner=self.request.user)
 
-# ----------------------------
-# Add Event
-# ----------------------------
+class EventDetailView(LoginRequiredMixin, DetailView):
+    model = Event
+    template_name = "events/event_detail.html"
+
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Event
     fields = ["title", "description", "start_time", "end_time"]
-    template_name = "add_event.html"
-    success_url = reverse_lazy("dashboard")
+    template_name = "events/event_form.html"
+    success_url = reverse_lazy("event-list")
 
     def form_valid(self, form):
-        calendar, _ = Calendar.objects.get_or_create(
-            owner=self.request.user,
-            defaults={"name": f"{self.request.user.username}'s Calendar"}
-        )
+        calendar, _ = Calendar.objects.get_or_create(owner=self.request.user, name="My Calendar")
         form.instance.calendar = calendar
         return super().form_valid(form)
 
-# ----------------------------
-# Home view
-# ----------------------------
-class HomeView(View):
-    def get(self, request):
-        if request.user.is_authenticated:
-            return redirect("dashboard")
-        return redirect("login")
+class EventUpdateView(LoginRequiredMixin, UpdateView):
+    model = Event
+    fields = ["title", "description", "start_time", "end_time"]
+    template_name = "events/event_form.html"
+    success_url = reverse_lazy("event-list")
+
+class EventDeleteView(LoginRequiredMixin, DeleteView):
+    model = Event
+    template_name = "events/event_detail.html"
+    success_url = reverse_lazy("event-list")
