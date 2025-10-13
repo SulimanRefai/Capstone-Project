@@ -33,16 +33,41 @@ class SignUpView(TemplateView):
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "events/dashboard.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        query = self.request.GET.get('q', '')
+
+        if query:
+            events = Event.objects.filter(title__icontains=query)
+        else:
+            events = Event.objects.all()
+
+        context['query'] = query
+        context['events'] = events
+        return context
+    
+
 class AboutView(TemplateView):
     template_name = "about.html"
 
 class EventListView(LoginRequiredMixin, ListView):
     model = Event
     template_name = "events/event_list.html"
+    context_object_name = "events"
 
     def get_queryset(self):
-        return Event.objects.filter(calendar__owner=self.request.user)
+        query = self.request.GET.get("q", "")
+        queryset = Event.objects.filter(calendar__owner=self.request.user)
+        if query:
+            queryset = queryset.filter(title__icontains=query)
+        return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query"] = self.request.GET.get("q", "")
+        return context
+        
 class EventDetailView(LoginRequiredMixin, DetailView):
     model = Event
     template_name = "events/event_detail.html"
