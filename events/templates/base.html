@@ -17,10 +17,11 @@
             {% if user.is_authenticated %}
             <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
             <li><a href="{% url 'event-list' %}">My Events</a></li>
+
             <li class="nav-right">
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="nav-logout-btn">Logout</button>
+                    <button type="submit" class="nav-logout-btn" >Logout</button>
                 </form>
             </li>
             {% else %}
@@ -28,7 +29,10 @@
             <li><a href="{% url 'signup' %}">Sign Up</a></li>
             {% endif %}
             <li class="nav-right"><a href="{% url 'about' %}">About</a></li>
+           
         </ul>
+        
+
     </nav>
 </header>
 <main>

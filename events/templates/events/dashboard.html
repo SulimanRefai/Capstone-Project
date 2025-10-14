@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 
-<h1>🚀 Welcome, {{ user.username }}!</h1>
+<h1> Welcome, {{ user.username }}!</h1>
 <p>Manage your events and quickly search for upcoming plans here.</p>
 
 <div class="action-buttons" style="display: flex; gap: 10px; margin-bottom: 2rem;">
@@ -18,7 +18,7 @@
 <hr>
 
 {% if events %}
-    <h3>📋 Search Results:</h3>
+    <h5> Search Results:</h5>
     <ul>
         {% for event in events %}
         <li>

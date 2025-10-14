@@ -37,11 +37,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         query = self.request.GET.get('q', '')
+        
 
         if query:
             events = Event.objects.filter(title__icontains=query)
         else:
-            events = Event.objects.all()
+            events = Event.objects.all().order_by('start_time')
 
         context['query'] = query
         context['events'] = events
@@ -58,7 +59,8 @@ class EventListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         query = self.request.GET.get("q", "")
-        queryset = Event.objects.filter(calendar__owner=self.request.user)
+        queryset = Event.objects.filter(calendar__owner=self.request.user).order_by('start_time')
+
         if query:
             queryset = queryset.filter(title__icontains=query)
         return queryset
@@ -93,3 +95,4 @@ class EventDeleteView(LoginRequiredMixin, DeleteView):
     model = Event
     template_name = "events/event_detail.html"
     success_url = reverse_lazy("event-list")
+    

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{ object.title }}{% endblock %}
 {% block content %}
-<h1>🗓️ Event Details: {{ object.title }}</h1>
+<h1> Event Details: {{ object.title }}</h1>
 
 <p>**Description:** {{ object.description|default:"No description provided." }}</p>
 <p>**Start Time:** **{{ object.start_time|date:"Y-m-d H:i" }}**</p>

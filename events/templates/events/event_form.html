@@ -2,12 +2,11 @@
 {% block title %}{% if object %}Edit Event{% else %}Add Event{% endif %}{% endblock %}
 
 {% block content %}
-<h1>{% if object %}✏️ Edit Event{% else %}➕ Add New Event{% endif %}</h1>
+<h1>{% if object %} Edit Event{% else %} Add New Event{% endif %}</h1>
 
 <form method="post" id="eventForm">
     {% csrf_token %}
     
-    {# عرض الأخطاء العامة للنموذج (إن وجدت) #}
     {% if form.non_field_errors %}
         <div class="errorlist">
             {% for error in form.non_field_errors %}
@@ -16,7 +15,6 @@
         </div>
     {% endif %}
 
-    {# عرض حقل العنوان والوصف بشكل طبيعي #}
     {% for field in form %}
         {% if field.name != 'start_time' and field.name != 'end_time' %}
             <p>
@@ -30,7 +28,6 @@
         {% endif %}
     {% endfor %}
 
-    {# حقول التاريخ والوقت مع إضافة معرفات واضحة لـ Flatpickr #}
     <p>
         <label for="{{ form.start_time.id_for_label }}">Start Time:</label>
         {{ form.start_time }}
@@ -54,40 +51,33 @@
 </form>
 
 <script>
-    // **ملاحظة:** ليعمل هذا الكود بشكل صحيح، يجب أن يكون اسم حقل وقت البداية هو 'id_start_time' 
-    // واسم حقل وقت النهاية هو 'id_end_time' (وهذا هو الافتراضي في Django).
     
     const startTimeInput = document.getElementById("id_start_time");
     const endTimeInput = document.getElementById("id_end_time");
     
-    // إعداد Flatpickr لوقت البدء
     const startPicker = flatpickr(startTimeInput, {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true,
         onChange: function(selectedDates, dateStr, instance) {
             if (selectedDates.length > 0) {
-                // يمنع اختيار وقت نهاية قبل البداية
                 endPicker.set('minDate', selectedDates[0]);
             }
         }
     });
 
-    // إعداد Flatpickr لوقت الانتهاء
     const endPicker = flatpickr(endTimeInput, {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true,
     });
 
-    // التحقق الإضافي عند الإرسال (JavaScript Validation)
     document.getElementById("eventForm").addEventListener("submit", function(e) {
         const startTimeValue = startTimeInput.value;
         const endTimeValue = endTimeInput.value;
         const errorMsg = document.getElementById("time-error");
 
         if (!startTimeValue || !endTimeValue) {
-            // نترك Django يتعامل مع الحقول المطلوبة الفارغة
             return;
         }
 
