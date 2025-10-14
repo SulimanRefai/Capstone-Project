@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 {% block title %}Login{% endblock %}
+
 {% block content %}
-<h1>🔑 User Login</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
-<p style="margin-top: 1.5rem;">Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+<div class="login-container">
+    <div class="login-image">
+        <img src="https://copilot.microsoft.com/th/id/BCO.df7334da-6050-46be-9b45-01eba6653454.png" alt="Login Illustration" style="background-color: white;">
+    </div>
+
+    <div class="login-form">
+        <h1>Welcome Back</h1>
+        <p style="margin-bottom: 1.5rem; color: #555;">Sign in to manage your events</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-primary" style="width: 100%;">Login</button>
+        </form>
+
+        <p style="margin-top: 1.5rem;">Don't have an account? 
+            <a href="{% url 'signup' %}" style="color: var(--accent-color); font-weight: bold;">Sign up here</a>
+        </p>
+    </div>
+</div>
 {% endblock %}

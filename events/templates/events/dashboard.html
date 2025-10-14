@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 
-<h1> Welcome, {{ user.username }}!</h1>
+<h1>Welcome, {{ user.username }}!</h1>
 <p>Manage your events and quickly search for upcoming plans here.</p>
 
 <div class="action-buttons" style="display: flex; gap: 10px; margin-bottom: 2rem;">
@@ -18,17 +18,32 @@
 <hr>
 
 {% if events %}
-    <h5> Search Results:</h5>
-    <ul>
+<h3>📅 Your Events</h3>
+
+<table style="width:100%; border-collapse: collapse; margin-top: 1rem;">
+    <thead style="background-color: var(--primary-color); color: white;">
+        <tr>
+            <th style="padding: 10px; text-align: left;">Title</th>
+            <th style="padding: 10px; text-align: left;">Start Time</th>
+            <th style="padding: 10px; text-align: left;">End Time</th>
+            <th style="padding: 10px; text-align: left;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
         {% for event in events %}
-        <li>
-            **{{ event.title }}** — {{ event.start_time|date:"Y-m-d H:i" }}
-            <a href="{% url 'event-detail' event.id %}" style="margin-left: 10px;">(View Details)</a>
-        </li>
+        <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 10px;">{{ event.title }}</td>
+            <td style="padding: 10px;">{{ event.start_time|date:"Y-m-d H:i" }}</td>
+            <td style="padding: 10px;">{{ event.end_time|date:"Y-m-d H:i" }}</td>
+            <td style="padding: 10px;">
+                <a href="{% url 'event-detail' event.id %}" style="color: var(--accent-color);">View</a> 
+            </td>
+        </tr>
         {% endfor %}
-    </ul>
+    </tbody>
+</table>
 {% else %}
-    <p>No events found matching your search criteria.</p>
+<p>No events found matching your search criteria.</p>
 {% endif %}
 
 {% endblock %}

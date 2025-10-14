@@ -20,7 +20,7 @@
     {% for event in events %}
     <li>
         <a href="{% url 'event-detail' event.id %}">
-            **{{ event.title }}**
+            {{ event.title }}
         </a>
         <span style="color: #6c757d; font-size: 0.9em;">
             ({{ event.start_time|date:"Y-m-d H:i" }} - {{ event.end_time|date:"Y-m-d H:i" }})
