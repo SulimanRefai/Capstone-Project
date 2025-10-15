@@ -8,8 +8,9 @@ Each user can create their own events such as meeting, study sessions, or remind
 
 # Tech stack 
 
-Frontend : HTML, CSS, Django Template.
-Backend : Python, Django, PostgreSQL.
+Frontend : HTML, CSS and Django Template.
+
+Backend : Python, Django and PostgreSQL.
 
 # User Stories:
 
