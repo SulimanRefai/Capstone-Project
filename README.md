@@ -33,8 +33,8 @@ Backend : Python, Django and PostgreSQL.
 # Key Features Implemented:
 
 1.User Authentication:
-Secure login and registration system using Django’s built-in authentication.
-Each user has a private calendar — no shared access to other users’ events.
+Secure login and registration system using Django built-in authentication.
+Each user has a private calendar no shared access to other users events.
 
 2.Event Management (CRUD):
 Users can Create, Read, Update, and Delete their own events.
