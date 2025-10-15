@@ -37,17 +37,18 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         query = self.request.GET.get('q', '')
-        
+
+        events = Event.objects.filter(calendar__owner=self.request.user)
 
         if query:
-            events = Event.objects.filter(title__icontains=query)
-        else:
-            events = Event.objects.all().order_by('start_time')
+            events = events.filter(title__icontains=query)
+
+        events = events.order_by('start_time')
 
         context['query'] = query
         context['events'] = events
         return context
-    
+
 
 class AboutView(TemplateView):
     template_name = "about.html"
@@ -76,14 +77,15 @@ class EventDetailView(LoginRequiredMixin, DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Event
-    fields = ["title", "description", "start_time", "end_time"]
-    template_name = "events/event_form.html"
-    success_url = reverse_lazy("event-list")
+    fields = ['title', 'description', 'start_time', 'end_time']
+    template_name = 'events/event_form.html'
+    success_url = reverse_lazy('event-list')
 
     def form_valid(self, form):
-        calendar, _ = Calendar.objects.get_or_create(owner=self.request.user, name="My Calendar")
+        calendar, created = Calendar.objects.get_or_create(owner=self.request.user, name=f"{self.request.user.username}'s Calendar")
         form.instance.calendar = calendar
         return super().form_valid(form)
+
 
 class EventUpdateView(LoginRequiredMixin, UpdateView):
     model = Event

@@ -5,15 +5,14 @@
 <h1>Welcome, {{ user.username }}!</h1>
 <p>Manage your events and quickly search for upcoming plans here.</p>
 
+
+
 <div class="action-buttons" style="display: flex; gap: 10px; margin-bottom: 2rem;">
     <a href="{% url 'event-add' %}" class="btn-primary btn-small" style="margin-top: 0;">+ Add New Event</a>
     <a href="{% url 'event-list' %}" class="btn-secondary btn-small" style="margin-top: 0;">View My Events</a>
 </div>
 
-<form method="get" action="{% url 'dashboard' %}" style="flex-direction: row; gap: 10px; align-items: center; margin-bottom: 1.5rem;">
-    <input type="text" name="q" placeholder="Search for an event..." value="{{ query|default:'' }}" style="margin-bottom: 0;">
-    <button type="submit" class="btn-primary btn-small" style="margin-top: 0; padding: 0.75rem 1.5rem;">Search</button>
-</form>
+
 
 <hr>
 

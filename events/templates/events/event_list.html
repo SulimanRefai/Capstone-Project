@@ -4,13 +4,7 @@
 
 <h1> My Events List</h1>
 
-<form method="get" action="" style="flex-direction: row; gap: 10px; align-items: center; margin-bottom: 2rem;">
-    <input type="text" name="q" placeholder="Search your events..." value="{{ query }}" style="margin-bottom: 0;">
-    <button type="submit" class="btn-primary btn-small" style="margin-top: 0; padding: 0.75rem 1.5rem;">Search</button>
-    {% if query %}
-        <a href="{% url 'event-list' %}" class="btn-secondary btn-small" style="margin-top: 0;">Clear</a>
-    {% endif %}
-</form>
+
 
 <a href="{% url 'event-add' %}" class="btn-primary btn-small" style="margin-bottom: 1.5rem; display: block; width: fit-content; margin-top: 0;">+ Add Event</a>
 

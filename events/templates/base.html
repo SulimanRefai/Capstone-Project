@@ -13,11 +13,26 @@
 <body>
 <header>
     <nav>
+
         <ul>
             {% if user.is_authenticated %}
+             <img src="https://copilot.microsoft.com/th/id/BCO.df7334da-6050-46be-9b45-01eba6653454.png" alt="Login Illustration" style="background-color: white; width : 5%;  border-radius: 10px;" >
             <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
             <li><a href="{% url 'event-list' %}">My Events</a></li>
-            
+
+     <div style="display: flex; justify-content: center; margin-bottom: 0rem;">
+    <form method="get" action="{% url 'dashboard' %}" style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+        <input type="text" name="q" placeholder="Search for an event..." 
+               value="{{ query|default:'' }}" 
+               style="flex: 2; padding: 1rem; border: 1px solid #ccc; border-radius: 20px; width: 400px;">
+        <button type="submit" 
+                class="btn-primary btn-small" 
+                style="padding: 0.5rem 1rem; cursor: pointer;">Search</button>
+    </form>
+</div>
+
+
+
             <li style="margin-left: auto;"></li> <li><a href="{% url 'about' %}">About</a></li>
             
             <li>
