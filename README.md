@@ -28,9 +28,7 @@ Backend : Python, Django and PostgreSQL.
 
 # ERD :
 
-https://dbdiagram.io/d/68e779abd2b621e4220502c1
-
-<img width="854" height="451" alt="image" src="https://github.com/user-attachments/assets/51ea10cf-0af3-4741-9ffd-37e7134faef1" />
+<img width="796" height="424" alt="image" src="https://github.com/user-attachments/assets/bc1e0fdd-f777-458f-a02f-ee968b09988c" />
 
 # Key Features Implemented:
 
